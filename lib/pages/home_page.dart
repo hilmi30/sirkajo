@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sirkajo/pages/daftar_page.dart';
-import 'package:sirkajo/pages/kamar_kosong_page.dart';
+import 'package:sirkajo/pages/lantai_page.dart';
 import 'package:sirkajo/pages/keluhan_page.dart';
 import 'package:sirkajo/pages/login_page.dart';
 import 'package:sirkajo/pages/tagihan_page.dart';
@@ -32,13 +32,13 @@ class _HomePageState extends State<HomePage> {
       return GestureDetector(
         onTap: () {
           switch (id) {
-            case 1: {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => DaftarPage()),
-              );
-            }
-            break;
+            // case 1: {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(builder: (context) => DaftarPage()),
+            //   );
+            // }
+            // break;
             case 2: {
               Navigator.push(
                 context,
@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
             case 4: {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => KamarKosongPage()),
+                MaterialPageRoute(builder: (context) => LantaiPage()),
               );
             }
             break;
@@ -109,10 +109,10 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Column(
           children: [
-            item('daftar', 'Daftar', 1),
+            // item('daftar', 'Daftar', 1),
+            item('pintu', 'Cek Kamar', 4),
             item('tagihan', 'Cek Tagihan', 2),
             item('keluhan', 'Keluhan', 3),
-            item('pintu', 'Cek Kamar Kosong', 4),
           ],
         ),
       ),

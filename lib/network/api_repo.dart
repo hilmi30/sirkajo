@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sirkajo/models/kamar_model.dart';
+import 'package:sirkajo/models/lantai_model.dart';
 import 'package:sirkajo/models/login_model.dart';
-import 'package:sirkajo/models/msg_model.dart';
 import 'package:sirkajo/models/register_model.dart';
-import 'package:sirkajo/models/tagihan_att_model.dart';
+import 'package:sirkajo/models/tagihan_model.dart';
 import 'package:sirkajo/services/SharePref.dart';
 
 class ApiRepo {
@@ -36,7 +38,7 @@ class ApiRepo {
     }
   }
 
-  Future<bool> login(String login, String pass) async {
+  Future<LoginModel> login(String login, String pass) async {
     var response = await http.post(
         "$_baseUrl/users/login",
         body: {
@@ -51,21 +53,48 @@ class ApiRepo {
     );
 
     if (response.statusCode == 200) {
-      var login = MessageModel.fromJson(jsonDecode(response.body)['message']);
+      var login = LoginModel.fromJson(jsonDecode(response.body));
       SharePref().simpanLogin(login);
-      return true;
+      return login;
     } else {
-      return false;
+      return null;
     }
   }
 
-  Future<TagihanAttModel> getTagihan(String id) async {
+  Future<TagihanModel> getTagihan() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String id = prefs.getString('id');
+
     var response = await http.get(
         "$_baseUrl/tagihan/$id"
     );
 
     if (response.statusCode == 200) {
-      return TagihanAttModel.fromJson(jsonDecode(response.body)['data'][0]['attributes']);
+      return TagihanModel.fromJson(jsonDecode(response.body));
+    } else {
+      return null;
+    }
+  }
+
+  Future<LantaiModel> getLantai() async {
+    var response = await http.get(
+        "$_baseUrl/lantai"
+    );
+
+    if (response.statusCode == 200) {
+      return LantaiModel.fromJson(jsonDecode(response.body));
+    } else {
+      return null;
+    }
+  }
+
+  Future<KamarModel> getKamar(String lantai) async {
+    var response = await http.get(
+        "$_baseUrl/kamar?lantai=$lantai"
+    );
+
+    if (response.statusCode == 200) {
+      return KamarModel.fromJson(jsonDecode(response.body));
     } else {
       return null;
     }

@@ -152,9 +152,9 @@ class _LoginPageState extends State<LoginPage> {
     var formState = _key.currentState;
 
     if (formState.validate()) {
-      ApiRepo().login(_emailController.text, _passwordController.text).then((status) {
+      ApiRepo().login(_emailController.text, _passwordController.text).then((data) {
         EasyLoading.dismiss();
-        if (status) {
+        if (data != null && data.status == 200) {
           Navigator.pushNamedAndRemoveUntil(
               context, '/home', ModalRoute.withName('/home'));
         } else {

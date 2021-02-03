@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:sirkajo/models/tagihan_att_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sirkajo/models/tagihan_model.dart';
 import 'package:sirkajo/network/api_repo.dart';
 
 class TagihanPage extends StatefulWidget {
@@ -11,57 +12,12 @@ class TagihanPage extends StatefulWidget {
 
 class _TagihanPageState extends State<TagihanPage> {
 
-  TagihanAttModel dataTagihan;
+  Future<TagihanModel> futureTagihan;
 
   @override
   void initState() {
     super.initState();
-    dataTagihan = TagihanAttModel();
-    getTagihan();
-  }
-
-  Future<void> getTagihan() async {
-    EasyLoading.show(
-      status: 'Memuat',
-      maskType: EasyLoadingMaskType.black
-    );
-    ApiRepo().getTagihan('3').then((data) {
-      EasyLoading.dismiss();
-      if (data != null) {
-        setState(() {
-          dataTagihan = data;
-        });
-      } else {
-        dialog('Terjadi Kesalahan', 'Silahkan coba lagi', 'Muat Ulang', 'Tutup');
-      }
-    });
-  }
-
-  Future dialog(String title, String content, String button1, String button2) {
-    return showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: [
-            FlatButton(
-              child: Text(button1),
-              onPressed: () {
-                getTagihan();
-              },
-            ),
-            FlatButton(
-              child: Text(button2),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
-          ],
-        );
-      },
-    );
+    futureTagihan = ApiRepo().getTagihan();
   }
 
   @override
@@ -104,13 +60,59 @@ class _TagihanPageState extends State<TagihanPage> {
               ),),
             ),
             SizedBox(height: 16.0,),
-            item('Penyewa', dataTagihan.penyewa ?? '-'),
-            item('Tanggal Sewa', dataTagihan.tanggalSewa ?? '-'),
-            item('Kode Kamar', dataTagihan.kodeKamar ?? '-'),
-            item('Lantai', dataTagihan.lantai ?? '-'),
-            // item('Keterangan Kamar', dataTagihan.keteranganKamar ?? '-'),
-            item('Pemilik', dataTagihan.pemilik ?? '-'),
-            item('Harga Sewa', 'Rp. ${dataTagihan.hargaSewa ?? '-'}/${dataTagihan.satuan ?? '-'}'),
+            FutureBuilder<TagihanModel>(
+              future: futureTagihan,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data.data.isNotEmpty) {
+                    return Column(
+                      children: [
+                        item('Penyewa', snapshot.data.data[0].attributes.penyewa ?? '-'),
+                        item('Tanggal Sewa', snapshot.data.data[0].attributes.tanggalSewa ?? '-'),
+                        item('Kode Kamar', snapshot.data.data[0].attributes.kodeKamar ?? '-'),
+                        item('Lantai', snapshot.data.data[0].attributes.lantai ?? '-'),
+                        item('Pemilik', snapshot.data.data[0].attributes.pemilik ?? '-'),
+                        item('Harga Sewa', 'Rp. ${snapshot.data.data[0].attributes.hargaSewa ?? '-'}'
+                            '/${snapshot.data.data[0].attributes.satuan ?? '-'}'),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      children: [
+                        item('Penyewa', '-'),
+                        item('Tanggal Sewa', '-'),
+                        item('Kode Kamar', '-'),
+                        item('Lantai', '-'),
+                        item('Pemilik', '-'),
+                        item('Harga Sewa', '-'),
+                      ],
+                    );
+                  }
+                } else if (snapshot.hasError) {
+                  Center(
+                    child: Column(
+                      children: [
+                        Text("Terjadi Kesalahan", textAlign: TextAlign.center,),
+                        SizedBox(height: 8,),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              futureTagihan = ApiRepo().getTagihan();
+                            });
+                          },
+                          child: Text("Coba Lagi", textAlign: TextAlign.center, style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12
+                          ),),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                // By default, show a loading spinner.
+                return Center(child: CircularProgressIndicator());
+              },
+            ),
             Expanded(
               child: Align(
                 alignment: AlignmentDirectional.bottomCenter,

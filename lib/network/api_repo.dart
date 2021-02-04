@@ -39,11 +39,15 @@ class ApiRepo {
   }
 
   Future<LoginModel> login(String login, String pass) async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     var response = await http.post(
         "$_baseUrl/users/login",
         body: {
           'login': login,
           'password': pass,
+          'token_fcm': prefs.getString('fcm_token')
         },
         headers: {
           "Accept": "application/json",

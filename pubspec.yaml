@@ -32,6 +32,8 @@ dependencies:
   flutter_easyloading: ^2.2.2
   shared_preferences: ^0.5.12+4
   image_picker: ^0.6.7+22
+  firebase_messaging: ^7.0.3
+  device_info: ^0.4.2+8
 
 dev_dependencies:
   flutter_test:

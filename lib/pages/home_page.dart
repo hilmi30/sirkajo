@@ -5,6 +5,7 @@ import 'package:sirkajo/pages/lantai_page.dart';
 import 'package:sirkajo/pages/keluhan_page.dart';
 import 'package:sirkajo/pages/login_page.dart';
 import 'package:sirkajo/pages/tagihan_page.dart';
+import 'package:sirkajo/pages/tentang_kami_page.dart';
 import 'package:sirkajo/services/SharePref.dart';
 
 class HomePage extends StatefulWidget {
@@ -113,6 +114,10 @@ class _HomePageState extends State<HomePage> {
             item('pintu', 'Cek Kamar', 4),
             item('tagihan', 'Cek Tagihan', 2),
             item('keluhan', 'Keluhan', 3),
+
+            Expanded(
+              child: Center(child: Text('Anda belum menyewa kamar'))
+            )
           ],
         ),
       ),
@@ -131,6 +136,14 @@ class _HomePageState extends State<HomePage> {
             ModalRoute.withName("/login")
         );
 
+        break;
+      case 'Tentang Kami':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TentangKamiPage(),
+          ),
+        );
         break;
       case 'Settings':
         break;

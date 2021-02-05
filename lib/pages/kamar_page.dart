@@ -94,7 +94,8 @@ class _KamarPageState extends State<KamarPage> {
                               ketKamar: snapshot.data.data[index].attributes.keteranganKamar,
                               pemilik: snapshot.data.data[index].attributes.pemilik,
                               kategori: snapshot.data.data[index].attributes.kategoriKamar,
-                              lantai: snapshot.data.data[index].attributes.lantai
+                              lantai: snapshot.data.data[index].attributes.lantai,
+                              id: snapshot.data.data[index].id
                             ),
                           ),
                         );

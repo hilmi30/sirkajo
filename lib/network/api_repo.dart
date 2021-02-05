@@ -7,6 +7,8 @@ import 'package:sirkajo/models/lantai_model.dart';
 import 'package:sirkajo/models/login_model.dart';
 import 'package:sirkajo/models/register_model.dart';
 import 'package:sirkajo/models/tagihan_model.dart';
+import 'package:sirkajo/models/tambah_sewa_model.dart';
+import 'package:sirkajo/models/tentang_kami_model.dart';
 import 'package:sirkajo/services/SharePref.dart';
 
 class ApiRepo {
@@ -47,7 +49,7 @@ class ApiRepo {
         body: {
           'login': login,
           'password': pass,
-          'token_fcm': prefs.getString('fcm_token')
+          'token_fcm': prefs.getString('fcmToken') ?? ''
         },
         headers: {
           "Accept": "application/json",
@@ -99,6 +101,41 @@ class ApiRepo {
 
     if (response.statusCode == 200) {
       return KamarModel.fromJson(jsonDecode(response.body));
+    } else {
+      return null;
+    }
+  }
+
+  Future<bool> tambahSewa(String idKamar) async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var response = await http.post(
+        "$_baseUrl/sewa/${prefs.getString('id')}",
+        body: {
+          'id_kamar': idKamar
+        },
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        encoding: Encoding.getByName("utf-8")
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<TentangKamiModel> getTentangKami() async {
+    var response = await http.get(
+        "$_baseUrl/tentang"
+    );
+
+    if (response.statusCode == 200) {
+      return TentangKamiModel.fromJson(jsonDecode(response.body));
     } else {
       return null;
     }

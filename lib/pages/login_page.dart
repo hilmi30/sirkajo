@@ -113,8 +113,8 @@ class _LoginPageState extends State<LoginPage> {
             ),
             SizedBox(height: 32,),
             Text('Lupa Password', textAlign: TextAlign.center, style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold
+                fontSize: 15,
+                fontWeight: FontWeight.bold
             ),),
             SizedBox(height: 16,),
             GestureDetector(
@@ -125,9 +125,9 @@ class _LoginPageState extends State<LoginPage> {
                 );
               },
               child: Text('Register', textAlign: TextAlign.center, style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue
               )),
             )
           ],
@@ -145,9 +145,10 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     EasyLoading.show(
-      status: 'Mohon Tunggu',
-      maskType: EasyLoadingMaskType.black
+        status: 'Mohon Tunggu',
+        maskType: EasyLoadingMaskType.black
     );
+    EasyLoading.removeAllCallbacks();
 
     var formState = _key.currentState;
 

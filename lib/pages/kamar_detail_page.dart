@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:sirkajo/models/tambah_sewa_model.dart';
+import 'package:sirkajo/network/api_repo.dart';
 
 class KamarDetailPage extends StatefulWidget {
   
@@ -9,6 +12,7 @@ class KamarDetailPage extends StatefulWidget {
   final String pemilik;
   final String kategori;
   final String lantai;
+  final String id;
 
   KamarDetailPage({
     Key key,
@@ -18,7 +22,8 @@ class KamarDetailPage extends StatefulWidget {
     @required this.ketKamar,
     @required this.pemilik,
     @required this.kategori,
-    @required this.lantai
+    @required this.lantai,
+    @required this.id,
   }) : super(key: key);
   
   @override
@@ -82,7 +87,54 @@ class _KamarDetailPageState extends State<KamarDetailPage> {
                   shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8.0)),
                   child: Text('SEWA'),
                   onPressed: () {
+                    EasyLoading.show(
+                      status: 'Mohon Tunggu',
+                      maskType: EasyLoadingMaskType.black
+                    );
+                    EasyLoading.removeAllCallbacks();
 
+                    ApiRepo().tambahSewa(widget.id).then((status) {
+                      EasyLoading.dismiss();
+                      if (status) {
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Berhasil"),
+                              content: Text("Kamar berhasil disewa"),
+                              actions: [
+                                FlatButton(
+                                  child: Text("Tutup"),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                )
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Terjadi Kesalahan"),
+                              content: Text("Silahkan coba lagi"),
+                              actions: [
+                                FlatButton(
+                                  child: Text("Tutup"),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                )
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    });
                   }
               ),
             ),

@@ -1,10 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sirkajo/network/api_repo.dart';
 import 'package:sirkajo/services/text_helper.dart';
 
 class KeluhanPage extends StatefulWidget {
+
+  final String idSewa;
+
+  KeluhanPage({
+    Key key,
+    @required this.idSewa,
+  }) : super(key: key);
+
   @override
   _KeluhanPageState createState() => _KeluhanPageState();
 }
@@ -20,7 +30,9 @@ class _KeluhanPageState extends State<KeluhanPage> {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     setState(() {
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
+        setState(() {
+          _image = File(pickedFile.path);
+        });
       } else {
         print('No image selected.');
       }
@@ -38,7 +50,7 @@ class _KeluhanPageState extends State<KeluhanPage> {
           padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _key,
-            child: Column(
+            child: ListView(
               children: [
                 TextFormField(
                   decoration: InputDecoration(
@@ -61,6 +73,16 @@ class _KeluhanPageState extends State<KeluhanPage> {
                   autocorrect: false,
                   validator: (val) => TextHelper().validateRequired(val, 'Keluhan'),
                 ),
+                SizedBox(height: 16.0,),
+                _image != null
+                    ?
+                Container(
+                    width: 300,
+                    height: 300,
+                    child: Image.file(_image, fit: BoxFit.contain,)
+                )
+                    :
+                SizedBox(height: 0,),
                 SizedBox(height: 16.0,),
                 Container(
                   width: double.infinity,
@@ -85,7 +107,51 @@ class _KeluhanPageState extends State<KeluhanPage> {
                     onPressed: () {
                       var formState = _key.currentState;
                       if (formState.validate()) {
-                        print('Form is valid');
+                        EasyLoading.show(
+                          status: 'Mohon Tunggu',
+                          maskType: EasyLoadingMaskType.black
+                        );
+                        EasyLoading.removeAllCallbacks();
+                        ApiRepo().tambahKeluhan(widget.idSewa, keluhanController.text, _image).then((status) {
+                          EasyLoading.dismiss();
+                          if (status) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Sukses"),
+                                  content: Text("Data berhasil dikirim"),
+                                  actions: [
+                                    FlatButton(
+                                      child: Text("Ok"),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Terjadi Kesalahan"),
+                                  content: Text("Data gagal dikirim. Silahkan coba lagi"),
+                                  actions: [
+                                    FlatButton(
+                                      child: Text("Tutup"),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        });
                       }
                     }
                 ),

@@ -144,15 +144,14 @@ class _LoginPageState extends State<LoginPage> {
       currentFocus.unfocus();
     }
 
-    EasyLoading.show(
-        status: 'Mohon Tunggu',
-        maskType: EasyLoadingMaskType.black
-    );
-    EasyLoading.removeAllCallbacks();
-
     var formState = _key.currentState;
 
     if (formState.validate()) {
+      EasyLoading.show(
+          status: 'Mohon Tunggu',
+          maskType: EasyLoadingMaskType.black
+      );
+      EasyLoading.removeAllCallbacks();
       ApiRepo().login(_emailController.text, _passwordController.text).then((data) {
         EasyLoading.dismiss();
         if (data != null && data.status == 200) {

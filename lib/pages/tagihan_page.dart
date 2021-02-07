@@ -21,6 +21,12 @@ class _TagihanPageState extends State<TagihanPage> {
   }
 
   @override
+  void deactivate() {
+    super.deactivate();
+    EasyLoading.dismiss();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     Widget item(String text1, String text2) {
@@ -64,26 +70,27 @@ class _TagihanPageState extends State<TagihanPage> {
               future: futureTagihan,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  if (snapshot.data.data.isNotEmpty) {
+                  if (snapshot.data != null) {
                     return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        item('Penyewa', snapshot.data.data[0].attributes.penyewa ?? '-'),
-                        item('Tanggal Sewa', snapshot.data.data[0].attributes.tanggalSewa ?? '-'),
-                        item('Kode Kamar', snapshot.data.data[0].attributes.kodeKamar ?? '-'),
-                        item('Lantai', snapshot.data.data[0].attributes.lantai ?? '-'),
-                        item('Pemilik', snapshot.data.data[0].attributes.pemilik ?? '-'),
-                        item('Harga Sewa', 'Rp. ${snapshot.data.data[0].attributes.hargaSewa ?? '-'}'
-                            '/${snapshot.data.data[0].attributes.satuan ?? '-'}'),
+                        item('Kode Kamar', snapshot.data.data.kodeKamar ?? '-'),
+                        item('Lantai', snapshot.data.data.lantai ?? '-'),
+                        item('Harga Sewa', 'Rp. ${snapshot.data.data.hargaSewa ?? '-'}'
+                            '/${snapshot.data.data.satuan ?? '-'}'),
+                        // item('Status', snapshot.data.message ?? '-'),
+                        Text('Status :'),
+                        SizedBox(height: 16,),
+                        Text(snapshot.data.message.toString().toUpperCase() ?? '-', style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),)
                       ],
                     );
                   } else {
                     return Column(
                       children: [
-                        item('Penyewa', '-'),
-                        item('Tanggal Sewa', '-'),
                         item('Kode Kamar', '-'),
                         item('Lantai', '-'),
-                        item('Pemilik', '-'),
                         item('Harga Sewa', '-'),
                       ],
                     );

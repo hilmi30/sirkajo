@@ -23,6 +23,12 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController ulangPassController = TextEditingController();
 
   @override
+  void deactivate() {
+    EasyLoading.dismiss();
+    super.deactivate();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     InputDecoration inputDecoration(String title) {

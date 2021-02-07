@@ -25,6 +25,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
+  void deactivate() {
+    EasyLoading.dismiss();
+    super.deactivate();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -151,7 +157,6 @@ class _LoginPageState extends State<LoginPage> {
           status: 'Mohon Tunggu',
           maskType: EasyLoadingMaskType.black
       );
-      EasyLoading.removeAllCallbacks();
       ApiRepo().login(_emailController.text, _passwordController.text).then((data) {
         EasyLoading.dismiss();
         if (data != null && data.status == 200) {

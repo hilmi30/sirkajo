@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  Data dataSewa;
+  SewaModel dataSewa;
 
   @override
   void initState() {
@@ -26,98 +28,47 @@ class _HomePageState extends State<HomePage> {
     getSewa();
   }
 
+  @override
+  void deactivate() {
+    EasyLoading.dismiss();
+    super.deactivate();
+  }
+
   void getSewa() {
     EasyLoading.show(
         status: 'Mohon Tunggu',
         maskType: EasyLoadingMaskType.black
     );
-    EasyLoading.removeAllCallbacks();
     ApiRepo().getSewa().then((data) {
       EasyLoading.dismiss();
-      if (data != null) {
-        setState(() {
-          dataSewa = data.data;
-        });
-      } else {
-        showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Terjadi Kesalahan"),
-              content: Text("Silahkan Coba Lagi"),
-              actions: [
-                FlatButton(
-                  child: Text("Coba Lagi"),
-                  onPressed: () {
-                    getSewa();
-                  },
-                )
-              ],
-            );
-          },
-        );
-      }
+      setState(() {
+        dataSewa = data;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
 
-    Widget item(String img, String title, int id) {
-      return GestureDetector(
-        onTap: () {
-          switch (id) {
-            // case 1: {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(builder: (context) => DaftarPage()),
-            //   );
-            // }
-            // break;
-            case 2: {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TagihanPage()),
-              );
-            }
-            break;
-            case 3: {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => KeluhanPage(idSewa: dataSewa.id,)),
-              );
-            }
-            break;
-            case 4: {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LantaiPage()),
-              );
-            }
-            break;
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            width: double.infinity,
-            height: 80,
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(8.0)
-            ),
+    Widget item(String text1, String text2) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(8.0)
+          ),
+          height: 50,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: 80,
-                  child: Image.asset('assets/img/$img.png', width: 50, height: 50,),
-                ),
-                Expanded(
-                    child: Text(title, textAlign: TextAlign.center, style: TextStyle(
-                        fontSize: 20
-                    ),)
-                )
+                Text(text1),
+                Text('Rp. $text2', style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold
+                ),)
               ],
             ),
           ),
@@ -125,9 +76,22 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
+    Widget setRiwayatBayar() {
+
+      final data = List<Widget>();
+
+      for (var riwayat in dataSewa.data.attributes.pembayaran) {
+        data.add(
+            item(riwayat.tanggalBayar, riwayat.jumlahBayar)
+        );
+      }
+
+      return Column(children: data,);
+    }
+
     Widget itemList(String text1, String text2) {
       return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Column(
           children: [
             Row(
@@ -164,14 +128,95 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        fixedColor: Colors.black54,
+        onTap: (index) {
+          switch (index) {
+            case 0: {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LantaiPage()),
+              );
+            }
+            break;
+            case 1: {
+              if (dataSewa == null) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Akses Dibatasi"),
+                      content: Text("Anda belum menyewa kamar"),
+                      actions: [
+                        FlatButton(
+                          child: Text("Tutup"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+
+                return;
+              }
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TagihanPage()),
+              );
+            }
+            break;
+            case 2: {
+              if (dataSewa == null) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Akses Dibatasi"),
+                      content: Text("Anda belum menyewa kamar"),
+                      actions: [
+                        FlatButton(
+                          child: Text("Tutup"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+
+                return;
+              }
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => KeluhanPage(idSewa: dataSewa.data.id,)),
+              );
+            }
+            break;
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sensor_door),
+            label: 'Kamar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.article),
+            label: 'Tagihan',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Keluhan',
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            // item('daftar', 'Daftar', 1),
-            item('pintu', 'Cek Kamar', 4),
-            item('tagihan', 'Cek Tagihan', 2),
-            item('keluhan', 'Keluhan', 3),
-
             (dataSewa != null) ? Expanded(
               child: ListView(
                 children: [
@@ -181,15 +226,26 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.bold
                   ),)),
                   SizedBox(height: 16,),
-                  itemList('Tanggal Sewa', dataSewa.attributes.tanggalSewa ?? '-'),
-                  itemList('Kode Kamar', dataSewa.attributes.kodeKamar ?? '-'),
-                  itemList('Lantai', dataSewa.attributes.lantai ?? '-'),
-                  itemList('Pemilik', dataSewa.attributes.pemilik ?? '-'),
-                  itemList('Kategori Kamar', dataSewa.attributes.kategoriKamar ?? '-'),
-                  itemList('Harga Sewa', 'Rp. ${dataSewa.attributes.hargaSewa ?? '-'}/${dataSewa.attributes.satuan ?? '-'}'),
+                  itemList('Tanggal Sewa', dataSewa.data.attributes.tanggalSewa ?? '-'),
+                  itemList('Kode Kamar', dataSewa.data.attributes.kodeKamar ?? '-'),
+                  itemList('Lantai', dataSewa.data.attributes.lantai ?? '-'),
+                  itemList('Pemilik', dataSewa.data.attributes.pemilik ?? '-'),
+                  itemList('Kategori Kamar', dataSewa.data.attributes.kategoriKamar ?? '-'),
+                  itemList('Harga Sewa', 'Rp. ${dataSewa.data.attributes.hargaSewa ?? '-'}/${dataSewa.data.attributes.satuan ?? '-'}'),
+
+                  SizedBox(height: 16,),
+                  Center(child: Text('Riwayat Pembayaran', style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold
+                  ),)),
+                  SizedBox(height: 16,),
+                  (dataSewa.data.attributes.pembayaran != null) ? setRiwayatBayar() : SizedBox(height: 0,)
+
                 ],
               )
-            ) : SizedBox(height: 0,)
+            ) : Expanded(
+                child: Center(child: Text('Anda belum menyewa kamar'))
+            )
           ],
         ),
       ),
@@ -199,14 +255,22 @@ class _HomePageState extends State<HomePage> {
   void handleClick(String value) {
     switch (value) {
       case 'Logout':
-        SharePref().hapusSharefPref();
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) => LoginPage()
-            ),
-            ModalRoute.withName("/login")
+        EasyLoading.show(
+          status: 'Mohon Tunggu',
+          maskType: EasyLoadingMaskType.black
         );
+        ApiRepo().logout().then((status) {
+          if (status) {
+            SharePref().hapusSharefPref();
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => LoginPage()
+                ),
+                ModalRoute.withName("/login")
+            );
+          }
+        });
 
         break;
       case 'Tentang Kami':

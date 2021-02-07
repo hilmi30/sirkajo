@@ -1,14 +1,17 @@
 class SewaModel {
+  int status;
   Data data;
 
-  SewaModel({this.data});
+  SewaModel({this.status, this.data});
 
   SewaModel.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
     if (this.data != null) {
       data['data'] = this.data.toJson();
     }
@@ -150,7 +153,7 @@ class Pembayaran {
   String jumlahBayar;
   String createdAt;
   String updatedAt;
-  String deletedAt;
+  Null deletedAt;
 
   Pembayaran(
       {this.idHistoriPembayaran,
@@ -191,7 +194,7 @@ class Keluhan {
   String isiKeluhan;
   String createdAt;
   String updatedAt;
-  String deletedAt;
+  Null deletedAt;
 
   Keluhan(
       {this.idKeluhan,

@@ -40,6 +40,12 @@ class _KeluhanPageState extends State<KeluhanPage> {
   }
 
   @override
+  void deactivate() {
+    EasyLoading.dismiss();
+    super.deactivate();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -109,9 +115,9 @@ class _KeluhanPageState extends State<KeluhanPage> {
                       if (formState.validate()) {
                         EasyLoading.show(
                           status: 'Mohon Tunggu',
-                          maskType: EasyLoadingMaskType.black
+                          maskType: EasyLoadingMaskType.black,
+                          dismissOnTap: true
                         );
-                        EasyLoading.removeAllCallbacks();
                         ApiRepo().tambahKeluhan(widget.idSewa, keluhanController.text, _image).then((status) {
                           EasyLoading.dismiss();
                           if (status) {

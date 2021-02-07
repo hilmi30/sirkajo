@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sirkajo/models/tambah_sewa_model.dart';
 import 'package:sirkajo/network/api_repo.dart';
+import 'package:sirkajo/pages/daftar_page.dart';
 
 class KamarDetailPage extends StatefulWidget {
   
@@ -31,6 +32,13 @@ class KamarDetailPage extends StatefulWidget {
 }
 
 class _KamarDetailPageState extends State<KamarDetailPage> {
+
+  @override
+  void deactivate() {
+    EasyLoading.dismiss();
+    super.deactivate();
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget item(String text1, String text2) {
@@ -87,54 +95,76 @@ class _KamarDetailPageState extends State<KamarDetailPage> {
                   shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8.0)),
                   child: Text('SEWA'),
                   onPressed: () {
-                    EasyLoading.show(
-                      status: 'Mohon Tunggu',
-                      maskType: EasyLoadingMaskType.black
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DaftarPage()),
                     );
-                    EasyLoading.removeAllCallbacks();
-
-                    ApiRepo().tambahSewa(widget.id).then((status) {
-                      EasyLoading.dismiss();
-                      if (status) {
-                        showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Berhasil"),
-                              content: Text("Kamar berhasil disewa"),
-                              actions: [
-                                FlatButton(
-                                  child: Text("Tutup"),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                )
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Terjadi Kesalahan"),
-                              content: Text("Silahkan coba lagi"),
-                              actions: [
-                                FlatButton(
-                                  child: Text("Tutup"),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                )
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    });
+                    // EasyLoading.show(
+                    //   status: 'Mohon Tunggu',
+                    //   maskType: EasyLoadingMaskType.black
+                    // );
+                    //
+                    // ApiRepo().tambahSewa(widget.id).then((status) {
+                    //   EasyLoading.dismiss();
+                    //   if (status == 200) {
+                    //     showDialog(
+                    //       barrierDismissible: false,
+                    //       context: context,
+                    //       builder: (BuildContext context) {
+                    //         return AlertDialog(
+                    //           title: Text("Berhasil"),
+                    //           content: Text("Kamar berhasil disewa"),
+                    //           actions: [
+                    //             FlatButton(
+                    //               child: Text("Tutup"),
+                    //               onPressed: () {
+                    //                 Navigator.pop(context);
+                    //               },
+                    //             )
+                    //           ],
+                    //         );
+                    //       },
+                    //     );
+                    //   } else if (status == 400) {
+                    //     showDialog(
+                    //       barrierDismissible: false,
+                    //       context: context,
+                    //       builder: (BuildContext context) {
+                    //         return AlertDialog(
+                    //           title: Text("Sudah Sewa Kamar"),
+                    //           content: Text("Anda hanya bisa menyewa 1 kamar"),
+                    //           actions: [
+                    //             FlatButton(
+                    //               child: Text("Tutup"),
+                    //               onPressed: () {
+                    //                 Navigator.pop(context);
+                    //               },
+                    //             )
+                    //           ],
+                    //         );
+                    //       },
+                    //     );
+                    //   } else {
+                    //     showDialog(
+                    //       barrierDismissible: false,
+                    //       context: context,
+                    //       builder: (BuildContext context) {
+                    //         return AlertDialog(
+                    //           title: Text("Terjadi Kesalahan"),
+                    //           content: Text("Silahkan coba lagi"),
+                    //           actions: [
+                    //             FlatButton(
+                    //               child: Text("Tutup"),
+                    //               onPressed: () {
+                    //                 Navigator.pop(context);
+                    //               },
+                    //             )
+                    //           ],
+                    //         );
+                    //       },
+                    //     );
+                    //   }
+                    // });
                   }
               ),
             ),

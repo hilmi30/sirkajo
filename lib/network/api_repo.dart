@@ -109,7 +109,7 @@ class ApiRepo {
     }
   }
 
-  Future<bool> tambahSewa(String idKamar) async {
+  Future<int> tambahSewa(String idKamar) async {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -125,11 +125,7 @@ class ApiRepo {
         encoding: Encoding.getByName("utf-8")
     );
 
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
+    return response.statusCode;
   }
 
   Future<TentangKamiModel> getTentangKami() async {
@@ -164,8 +160,6 @@ class ApiRepo {
 
     print(foto.path);
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
     var uri = Uri.parse("$_baseUrl/keluhan");
     var length = await foto.length();
 
@@ -191,25 +185,21 @@ class ApiRepo {
     } else {
       return false;
     }
+  }
 
-    // var response = await http.post(
-    //     "$_baseUrl/keluhan",
-    //     body: {
-    //       'id_sewa': idSewa,
-    //       'isi_keluhan': keluhan,
-    //       'foto' : foto
-    //     },
-    //     headers: {
-    //       "Accept": "application/json",
-    //       "Content-Type": "application/x-www-form-urlencoded"
-    //     },
-    //     encoding: Encoding.getByName("utf-8")
-    // );
-    //
-    // if (response.statusCode == 200) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
+  Future<bool> logout() async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String id = prefs.getString('id');
+
+    var response = await http.get(
+        "$_baseUrl/users/logout/$id"
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

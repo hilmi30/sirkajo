@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sirkajo/models/kamar_model.dart';
 import 'package:sirkajo/network/api_repo.dart';
 import 'package:sirkajo/pages/kamar_detail_page.dart';
+import 'package:intl/intl.dart';
 
 class KamarPage extends StatefulWidget {
 
@@ -15,6 +16,7 @@ class KamarPage extends StatefulWidget {
 class _KamarPageState extends State<KamarPage> {
 
   Future<KamarModel> futureKamar;
+  final cur = new NumberFormat("#,##0", "id_ID");
 
   @override
   void initState() {
@@ -42,7 +44,7 @@ class _KamarPageState extends State<KamarPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Kamar $text1', style: TextStyle(
+                    Text('$text1', style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold
                     ),),
@@ -95,14 +97,16 @@ class _KamarPageState extends State<KamarPage> {
                               pemilik: snapshot.data.data[index].attributes.pemilik,
                               kategori: snapshot.data.data[index].attributes.kategoriKamar,
                               lantai: snapshot.data.data[index].attributes.lantai,
-                              id: snapshot.data.data[index].id
+                              id: snapshot.data.data[index].id,
+                              kodeBlok: snapshot.data.data[index].attributes.kodeBlok
                             ),
                           ),
                         );
                       },
                       child: item(
-                        snapshot.data.data[index].attributes.kodeKamar.toString(),
-                        'Rp. ${snapshot.data.data[index].attributes.hargaSewa.toString()}/'
+                        '${snapshot.data.data[index].attributes.kodeBlok} '
+                        '${snapshot.data.data[index].attributes.lantai} No ${snapshot.data.data[index].attributes.kodeKamar}',
+                        'Rp. ${cur.format(int.parse(snapshot.data.data[index].attributes.hargaSewa))}/'
                             '${snapshot.data.data[index].attributes.satuan.toString()}',
                         snapshot.data.data[index].attributes.kategoriKamar,
                         ''

@@ -27,7 +27,6 @@ class ApiRepo {
           'pass_confirm': registerModel.passConfirm,
           'fullname': registerModel.fullName,
           'phone': registerModel.phone,
-          'nik': registerModel.nik,
         },
         headers: {
           "Accept": "application/json",

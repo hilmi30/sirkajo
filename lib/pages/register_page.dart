@@ -16,7 +16,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   TextEditingController namaUserController = TextEditingController();
   TextEditingController namaController = TextEditingController();
-  TextEditingController ktpController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController hpController = TextEditingController();
   TextEditingController passController = TextEditingController();
@@ -83,16 +82,6 @@ class _RegisterPageState extends State<RegisterPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
-                  decoration: inputDecoration('No. KTP'),
-                  controller: ktpController,
-                  keyboardType: TextInputType.number,
-                  autocorrect: false,
-                  validator: (val) => TextHelper().validateRequired(val, 'No. KTP'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
                   decoration: inputDecoration('Email'),
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -150,7 +139,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         final reg = RegisterModel();
                         reg.username = namaUserController.text.toString();
                         reg.fullName = namaController.text.toString();
-                        reg.nik = ktpController.text.toString();
                         reg.email = emailController.text.toString();
                         reg.phone = hpController.text.toString();
                         reg.password = passController.text.toString();

@@ -1,17 +1,14 @@
 class SewaModel {
-  int status;
   Data data;
 
-  SewaModel({this.status, this.data});
+  SewaModel({this.data});
 
   SewaModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
     if (this.data != null) {
       data['data'] = this.data.toJson();
     }
@@ -47,6 +44,7 @@ class Data {
 
 class Attributes {
   String tanggalSewa;
+  String kodeBlok;
   String kodeKamar;
   String lantai;
   String hargaSewa;
@@ -61,6 +59,7 @@ class Attributes {
 
   Attributes(
       {this.tanggalSewa,
+        this.kodeBlok,
         this.kodeKamar,
         this.lantai,
         this.hargaSewa,
@@ -75,6 +74,7 @@ class Attributes {
 
   Attributes.fromJson(Map<String, dynamic> json) {
     tanggalSewa = json['tanggal_sewa'];
+    kodeBlok = json['kode_blok'];
     kodeKamar = json['kode_kamar'];
     lantai = json['lantai'];
     hargaSewa = json['harga_sewa'];
@@ -103,6 +103,7 @@ class Attributes {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['tanggal_sewa'] = this.tanggalSewa;
+    data['kode_blok'] = this.kodeBlok;
     data['kode_kamar'] = this.kodeKamar;
     data['lantai'] = this.lantai;
     data['harga_sewa'] = this.hargaSewa;
@@ -194,7 +195,7 @@ class Keluhan {
   String isiKeluhan;
   String createdAt;
   String updatedAt;
-  Null deletedAt;
+  String deletedAt;
 
   Keluhan(
       {this.idKeluhan,

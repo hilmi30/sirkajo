@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sirkajo/models/tambah_sewa_model.dart';
 import 'package:sirkajo/network/api_repo.dart';
 import 'package:sirkajo/pages/daftar_page.dart';
+import 'package:intl/intl.dart';
 
 class KamarDetailPage extends StatefulWidget {
   
@@ -14,6 +15,7 @@ class KamarDetailPage extends StatefulWidget {
   final String kategori;
   final String lantai;
   final String id;
+  final String kodeBlok;
 
   KamarDetailPage({
     Key key,
@@ -25,6 +27,7 @@ class KamarDetailPage extends StatefulWidget {
     @required this.kategori,
     @required this.lantai,
     @required this.id,
+    @required this.kodeBlok,
   }) : super(key: key);
   
   @override
@@ -32,6 +35,8 @@ class KamarDetailPage extends StatefulWidget {
 }
 
 class _KamarDetailPageState extends State<KamarDetailPage> {
+
+  final cur = new NumberFormat("#,##0", "id_ID");
 
   @override
   void deactivate() {
@@ -73,15 +78,14 @@ class _KamarDetailPageState extends State<KamarDetailPage> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Text('Kamar ${widget.kodeKamar}', style: TextStyle(
+              child: Text('${widget.kodeBlok} ${widget.lantai} No ${widget.kodeKamar}', style: TextStyle(
                   fontSize: 20
               ),),
             ),
             SizedBox(height: 16.0,),
-            item('Harga Sewa', 'Rp. ${widget.hargaSewa}/${widget.satuan}'),
+            item('Harga Sewa', 'Rp. ${cur.format(int.parse(widget.hargaSewa))}/${widget.satuan}'),
             item('Pemilik', '${widget.pemilik}'),
             item('Kategori', '${widget.kategori}'),
-            item('Lantai', '${widget.lantai}'),
             Text('Keterangan :'),
             SizedBox(height: 8,),
             Text('${widget.ketKamar}'),

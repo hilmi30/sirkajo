@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sirkajo/models/tagihan_model.dart';
 import 'package:sirkajo/network/api_repo.dart';
+import 'package:intl/intl.dart';
 
 class TagihanPage extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class TagihanPage extends StatefulWidget {
 class _TagihanPageState extends State<TagihanPage> {
 
   Future<TagihanModel> futureTagihan;
+  final cur = new NumberFormat("#,##0", "id_ID");
 
   @override
   void initState() {
@@ -74,12 +76,12 @@ class _TagihanPageState extends State<TagihanPage> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        item('Kode Kamar', snapshot.data.data.kodeKamar ?? '-'),
-                        item('Lantai', snapshot.data.data.lantai ?? '-'),
-                        item('Harga Sewa', 'Rp. ${snapshot.data.data.hargaSewa ?? '-'}'
+                        item('Kamar', '${snapshot.data.data.kodeBlok} ${snapshot.data.data.lantai} '
+                            'No ${snapshot.data.data.kodeKamar}' ?? '-'),
+                        item('Harga Sewa', 'Rp. ${cur.format(int.parse(snapshot.data.data.hargaSewa)) ?? '-'}'
                             '/${snapshot.data.data.satuan ?? '-'}'),
                         // item('Status', snapshot.data.message ?? '-'),
-                        Text('Status :'),
+                        Text('Status'),
                         SizedBox(height: 16,),
                         Text(snapshot.data.message.toString().toUpperCase() ?? '-', style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -89,9 +91,9 @@ class _TagihanPageState extends State<TagihanPage> {
                   } else {
                     return Column(
                       children: [
-                        item('Kode Kamar', '-'),
-                        item('Lantai', '-'),
+                        item('Kamar', '-'),
                         item('Harga Sewa', '-'),
+                        Text('Status')
                       ],
                     );
                   }

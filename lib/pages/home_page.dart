@@ -12,6 +12,7 @@ import 'package:sirkajo/pages/login_page.dart';
 import 'package:sirkajo/pages/tagihan_page.dart';
 import 'package:sirkajo/pages/tentang_kami_page.dart';
 import 'package:sirkajo/services/SharePref.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -21,6 +22,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   SewaModel dataSewa;
+  final cur = new NumberFormat("#,##0", "id_ID");
 
   @override
   void initState() {
@@ -82,7 +84,7 @@ class _HomePageState extends State<HomePage> {
 
       for (var riwayat in dataSewa.data.attributes.pembayaran) {
         data.add(
-            item(riwayat.tanggalBayar, riwayat.jumlahBayar)
+            item(riwayat.tanggalBayar, cur.format(int.parse(riwayat.jumlahBayar)))
         );
       }
 
@@ -227,11 +229,11 @@ class _HomePageState extends State<HomePage> {
                   ),)),
                   SizedBox(height: 16,),
                   itemList('Tanggal Sewa', dataSewa.data.attributes.tanggalSewa ?? '-'),
-                  itemList('Kode Kamar', dataSewa.data.attributes.kodeKamar ?? '-'),
-                  itemList('Lantai', dataSewa.data.attributes.lantai ?? '-'),
+                  itemList('Kamar', '${dataSewa.data.attributes.kodeBlok} ${dataSewa.data.attributes.lantai} No '
+                      '${dataSewa.data.attributes.kodeKamar}'),
                   itemList('Pemilik', dataSewa.data.attributes.pemilik ?? '-'),
                   itemList('Kategori Kamar', dataSewa.data.attributes.kategoriKamar ?? '-'),
-                  itemList('Harga Sewa', 'Rp. ${dataSewa.data.attributes.hargaSewa ?? '-'}/${dataSewa.data.attributes.satuan ?? '-'}'),
+                  itemList('Harga Sewa', 'Rp. ${cur.format(int.parse(dataSewa.data.attributes.hargaSewa)) ?? '-'}/${dataSewa.data.attributes.satuan ?? '-'}'),
 
                   SizedBox(height: 16,),
                   Center(child: Text('Riwayat Pembayaran', style: TextStyle(

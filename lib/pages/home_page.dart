@@ -1,5 +1,6 @@
 // import 'dart:html';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -117,6 +118,9 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('SIRKAJO'),
         actions: [
+          IconButton(icon: Icon(Icons.refresh), onPressed: () {
+            getSewa();
+          }),
           PopupMenuButton<String>(
             onSelected: handleClick,
             itemBuilder: (BuildContext context) {

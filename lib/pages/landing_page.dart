@@ -12,19 +12,12 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> {
 
-  FirebaseMessaging fm = FirebaseMessaging();
-
   _LandingPageState() {
-    fm.getToken().then((fcmToken) {
-      checkUser(fcmToken);
-    });
-    fm.configure();
+    checkUser();
   }
 
-
-  void checkUser(String fcmToken) async {
+  void checkUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('fcmToken', fcmToken);
     var token = prefs.getString('token');
     if (token == null || token == '') {
       Navigator.pushAndRemoveUntil(

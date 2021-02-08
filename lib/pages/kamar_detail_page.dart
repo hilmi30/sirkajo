@@ -101,74 +101,8 @@ class _KamarDetailPageState extends State<KamarDetailPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => DaftarPage()),
+                      MaterialPageRoute(builder: (context) => DaftarPage(idKamar: widget.id,)),
                     );
-                    // EasyLoading.show(
-                    //   status: 'Mohon Tunggu',
-                    //   maskType: EasyLoadingMaskType.black
-                    // );
-                    //
-                    // ApiRepo().tambahSewa(widget.id).then((status) {
-                    //   EasyLoading.dismiss();
-                    //   if (status == 200) {
-                    //     showDialog(
-                    //       barrierDismissible: false,
-                    //       context: context,
-                    //       builder: (BuildContext context) {
-                    //         return AlertDialog(
-                    //           title: Text("Berhasil"),
-                    //           content: Text("Kamar berhasil disewa"),
-                    //           actions: [
-                    //             FlatButton(
-                    //               child: Text("Tutup"),
-                    //               onPressed: () {
-                    //                 Navigator.pop(context);
-                    //               },
-                    //             )
-                    //           ],
-                    //         );
-                    //       },
-                    //     );
-                    //   } else if (status == 400) {
-                    //     showDialog(
-                    //       barrierDismissible: false,
-                    //       context: context,
-                    //       builder: (BuildContext context) {
-                    //         return AlertDialog(
-                    //           title: Text("Sudah Sewa Kamar"),
-                    //           content: Text("Anda hanya bisa menyewa 1 kamar"),
-                    //           actions: [
-                    //             FlatButton(
-                    //               child: Text("Tutup"),
-                    //               onPressed: () {
-                    //                 Navigator.pop(context);
-                    //               },
-                    //             )
-                    //           ],
-                    //         );
-                    //       },
-                    //     );
-                    //   } else {
-                    //     showDialog(
-                    //       barrierDismissible: false,
-                    //       context: context,
-                    //       builder: (BuildContext context) {
-                    //         return AlertDialog(
-                    //           title: Text("Terjadi Kesalahan"),
-                    //           content: Text("Silahkan coba lagi"),
-                    //           actions: [
-                    //             FlatButton(
-                    //               child: Text("Tutup"),
-                    //               onPressed: () {
-                    //                 Navigator.pop(context);
-                    //               },
-                    //             )
-                    //           ],
-                    //         );
-                    //       },
-                    //     );
-                    //   }
-                    // });
                   }
               ),
             ),

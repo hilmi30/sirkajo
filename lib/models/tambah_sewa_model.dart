@@ -28,6 +28,9 @@ class Message {
   String tanggalSewa;
   String idPenyewa;
   String idKamar;
+  String fotoKk;
+  String fotoNik;
+  String fotoSuratNikah;
   CreatedAt createdAt;
   CreatedAt updatedAt;
   Null deletedAt;
@@ -37,6 +40,9 @@ class Message {
         this.tanggalSewa,
         this.idPenyewa,
         this.idKamar,
+        this.fotoKk,
+        this.fotoNik,
+        this.fotoSuratNikah,
         this.createdAt,
         this.updatedAt,
         this.deletedAt});
@@ -46,6 +52,9 @@ class Message {
     tanggalSewa = json['tanggal_sewa'];
     idPenyewa = json['id_penyewa'];
     idKamar = json['id_kamar'];
+    fotoKk = json['foto_kk'];
+    fotoNik = json['foto_nik'];
+    fotoSuratNikah = json['foto_surat_nikah'];
     createdAt = json['created_at'] != null
         ? new CreatedAt.fromJson(json['created_at'])
         : null;
@@ -61,6 +70,9 @@ class Message {
     data['tanggal_sewa'] = this.tanggalSewa;
     data['id_penyewa'] = this.idPenyewa;
     data['id_kamar'] = this.idKamar;
+    data['foto_kk'] = this.fotoKk;
+    data['foto_nik'] = this.fotoNik;
+    data['foto_surat_nikah'] = this.fotoSuratNikah;
     if (this.createdAt != null) {
       data['created_at'] = this.createdAt.toJson();
     }

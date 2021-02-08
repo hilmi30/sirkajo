@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sirkajo/network/api_repo.dart';
@@ -13,6 +14,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
+  FirebaseMessaging fm = FirebaseMessaging();
+  String fcmToken = '';
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   bool _obscurePassword;
   TextEditingController _emailController = TextEditingController();
@@ -22,6 +25,13 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     _obscurePassword = true;
+    fm.getToken().then((value) {
+      print(value);
+      setState(() {
+        fcmToken = value;
+      });
+    });
+    fm.configure();
   }
 
   @override
@@ -157,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
           status: 'Mohon Tunggu',
           maskType: EasyLoadingMaskType.black
       );
-      ApiRepo().login(_emailController.text, _passwordController.text).then((data) {
+      ApiRepo().login(_emailController.text, _passwordController.text, fcmToken).then((data) {
         EasyLoading.dismiss();
         if (data != null && data.status == 200) {
           Navigator.pushNamedAndRemoveUntil(

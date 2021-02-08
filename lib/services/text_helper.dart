@@ -19,4 +19,11 @@ class TextHelper {
     }
     return null;
   }
+
+  String validateLength(String val, fieldName, int length) {
+    if (val.length < length) {
+      return '$fieldName harus lebih dari $length karakter';
+    }
+    return null;
+  }
 }

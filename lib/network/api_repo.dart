@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sirkajo/models/kamar_model.dart';
@@ -42,16 +43,14 @@ class ApiRepo {
     }
   }
 
-  Future<LoginModel> login(String login, String pass) async {
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<LoginModel> login(String login, pass, fcmToken) async {
 
     var response = await http.post(
         "$_baseUrl/users/login",
         body: {
           'login': login,
           'password': pass,
-          'token_fcm': prefs.getString('fcmToken') ?? ''
+          'token_fcm': fcmToken
         },
         headers: {
           "Accept": "application/json",
@@ -108,23 +107,40 @@ class ApiRepo {
     }
   }
 
-  Future<int> tambahSewa(String idKamar) async {
+  Future<int> tambahSewa(String idKamar, File ktp, kk, suratNikah) async {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var response = await http.post(
-        "$_baseUrl/sewa/${prefs.getString('id')}",
-        body: {
-          'id_kamar': idKamar
-        },
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        encoding: Encoding.getByName("utf-8")
-    );
+    var uri = Uri.parse("$_baseUrl/sewa/${prefs.getString('id')}");
+    var ktpLength = await ktp.length();
+    var kkLength = await kk.length();
+    var suratNikahLength = await suratNikah.length();
 
-    return response.statusCode;
+    Map<String, String> headers = {
+      "Accept": "application/json",
+    };
+
+    http.MultipartRequest request = new http.MultipartRequest('POST', uri)
+      ..fields['id_kamar'] = idKamar
+      ..headers.addAll(headers)
+      ..files.add(
+        // replace file with your field name exampe: image
+        http.MultipartFile('foto_nik', ktp.openRead(), ktpLength,
+            filename: '${basename(ktp.path)}'),
+      )
+    ..files.add(
+      http.MultipartFile('foto_kk', kk.openRead(), kkLength,
+          filename: '${basename(kk.path)}'),
+    )
+      ..files.add(
+        http.MultipartFile('foto_surat_nikah', suratNikah.openRead(), suratNikahLength,
+            filename: '${basename(suratNikah.path)}'),
+      );;
+
+
+    var respons = await http.Response.fromStream(await request.send());
+
+    return respons.statusCode;
   }
 
   Future<TentangKamiModel> getTentangKami() async {
@@ -156,9 +172,6 @@ class ApiRepo {
   }
 
   Future<bool> tambahKeluhan(String idSewa, keluhan, File foto) async {
-
-    print(foto.path);
-
     var uri = Uri.parse("$_baseUrl/keluhan");
     var length = await foto.length();
 

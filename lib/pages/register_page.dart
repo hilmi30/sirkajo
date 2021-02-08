@@ -106,7 +106,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: passController,
                   obscureText: true,
                   autocorrect: false,
-                  validator: (val) => TextHelper().validateRequired(val, 'Password'),
+                  validator: (val) => TextHelper().validateLength(val, 'Password', 8),
                 ),
               ),
               Padding(
@@ -116,7 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: ulangPassController,
                   obscureText: true,
                   autocorrect: false,
-                  validator: (val) => TextHelper().validateRequired(val, 'Password'),
+                  validator: (val) => TextHelper().validateLength(val, 'Ulangi Password', 8),
                 ),
               ),
               Padding(
@@ -128,14 +128,22 @@ class _RegisterPageState extends State<RegisterPage> {
                     shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8.0)),
                     child: Text('Register'),
                     onPressed: () {
-                      EasyLoading.show(
-                        status: 'Mohon Tunggu',
-                        maskType: EasyLoadingMaskType.black
-                      );
+
+                      FocusScopeNode currentFocus = FocusScope.of(context);
+
+                      if (!currentFocus.hasPrimaryFocus) {
+                        currentFocus.unfocus();
+                      }
 
                       var formState = _key.currentState;
 
                       if (formState.validate()) {
+
+                        EasyLoading.show(
+                            status: 'Mohon Tunggu',
+                            maskType: EasyLoadingMaskType.black
+                        );
+
                         final reg = RegisterModel();
                         reg.username = namaUserController.text.toString();
                         reg.fullName = namaController.text.toString();
@@ -147,7 +155,24 @@ class _RegisterPageState extends State<RegisterPage> {
                         ApiRepo().register(reg).then((success) {
                           EasyLoading.dismiss();
                           if (success) {
-                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Register Berhasil"),
+                                  content: Text("Silahkan login menggunakan akun yang sudah anda buat"),
+                                  actions: [
+                                    FlatButton(
+                                      child: Text("Tutup"),
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           } else {
                             showDialog(
                               context: context,

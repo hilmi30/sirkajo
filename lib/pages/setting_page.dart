@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sirkajo/models/register_model.dart';
 import 'package:sirkajo/network/api_repo.dart';
 import 'package:sirkajo/services/text_helper.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-class RegisterPage extends StatefulWidget {
+class SettingPage extends StatefulWidget {
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _SettingPageState createState() => _SettingPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _SettingPageState extends State<SettingPage> {
 
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   TextEditingController namaUserController = TextEditingController();
@@ -20,6 +20,12 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController ulangPassController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+
+  }
+
+  @override
   void deactivate() {
     EasyLoading.dismiss();
     super.deactivate();
@@ -27,7 +33,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-
     InputDecoration inputDecoration(String title) {
       return InputDecoration(
         labelText: title,
@@ -47,7 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register')
+          title: Text('Profil')
       ),
       body: SafeArea(
         child: Form(
@@ -55,16 +60,16 @@ class _RegisterPageState extends State<RegisterPage> {
           child: ListView(
             children: [
               SizedBox(height: 32,),
-              Text('Silahkan mengisi form di bawah ini', textAlign: TextAlign.center,),
+              Text('Sentuh form untuk mengubah data', textAlign: TextAlign.center,),
               SizedBox(height: 16,),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
-                  decoration: inputDecoration('Nama Pengguna'),
-                  controller: namaUserController,
-                  keyboardType: TextInputType.text,
-                  autocorrect: false,
-                  validator: (val) => TextHelper().validateRequired(val, 'Username')
+                    decoration: inputDecoration('Nama Pengguna'),
+                    controller: namaUserController,
+                    keyboardType: TextInputType.text,
+                    autocorrect: false,
+                    validator: (val) => TextHelper().validateRequired(val, 'Username')
                 ),
               ),
               Padding(
@@ -80,11 +85,11 @@ class _RegisterPageState extends State<RegisterPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
-                  decoration: inputDecoration('Email'),
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  autocorrect: false,
-                  validator: (val) => TextHelper().validateEmail(val)
+                    decoration: inputDecoration('Email'),
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    autocorrect: false,
+                    validator: (val) => TextHelper().validateEmail(val)
                 ),
               ),
               Padding(
@@ -124,7 +129,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     textColor: Colors.white,
                     padding: const EdgeInsets.all(16),
                     shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8.0)),
-                    child: Text('Register'),
+                    child: Text('Update'),
                     onPressed: () {
 
                       FocusScopeNode currentFocus = FocusScope.of(context);
@@ -150,34 +155,15 @@ class _RegisterPageState extends State<RegisterPage> {
                         reg.password = passController.text.toString();
                         reg.passConfirm = ulangPassController.text.toString();
 
-                        ApiRepo().register(reg).then((data) {
+                        ApiRepo().updateProfile(reg).then((data) {
                           EasyLoading.dismiss();
                           if (data == 200) {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text("Register Berhasil"),
-                                  content: Text("Silahkan login menggunakan akun yang sudah anda buat"),
-                                  actions: [
-                                    FlatButton(
-                                      child: Text("Tutup"),
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          } else if (data == 202){
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text("Register Berhasil"),
-                                  content: Text("Kami mengirimkan verifikasi ke email anda. Silahkan cek email"),
+                                  title: Text("Update Sukses"),
+                                  content: Text("Perubahan data berhasil"),
                                   actions: [
                                     FlatButton(
                                       child: Text("Tutup"),

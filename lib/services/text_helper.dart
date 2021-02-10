@@ -21,8 +21,17 @@ class TextHelper {
   }
 
   String validateLength(String val, fieldName, int length) {
-    if (val.length < length) {
+    if (val == null || val == '') {
+      return '$fieldName tidak boleh kosong';
+    } else if (val.length < length) {
       return '$fieldName harus lebih dari $length karakter';
+    }
+    return null;
+  }
+
+  String match(String val1, val2, fieldName) {
+    if (val1 != val2) {
+      return '$fieldName tidak sama';
     }
     return null;
   }

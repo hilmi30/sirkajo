@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sirkajo/models/kamar_model.dart';
 import 'package:sirkajo/models/lantai_model.dart';
 import 'package:sirkajo/models/login_model.dart';
+import 'package:sirkajo/models/register_error.dart';
 import 'package:sirkajo/models/register_model.dart';
 import 'package:sirkajo/models/sewa_model.dart';
 import 'package:sirkajo/models/tagihan_model.dart';
@@ -18,7 +19,7 @@ import 'package:path/path.dart';
 class ApiRepo {
   final _baseUrl = "https://polar-badlands-80162.herokuapp.com/api/v1";
 
-  Future<bool> register(RegisterModel registerModel) async {
+  Future<dynamic> register(RegisterModel registerModel) async {
     var response = await http.post(
         "$_baseUrl/users",
         body: {
@@ -36,10 +37,10 @@ class ApiRepo {
         encoding: Encoding.getByName("utf-8")
     );
 
-    if (response.statusCode == 200) {
-      return true;
+    if (response.statusCode == 200 || response.statusCode == 202) {
+      return response.statusCode;
     } else {
-      return false;
+      return RegisterErrorModel.fromJson(jsonDecode(response.body));
     }
   }
 
@@ -212,6 +213,35 @@ class ApiRepo {
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future<dynamic> updateProfile(RegisterModel registerModel) async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String id = prefs.getString('id');
+
+    var response = await http.post(
+        "$_baseUrl/users/$id",
+        body: {
+          'username': registerModel.username ?? '',
+          'email': registerModel.email ?? '',
+          'password': registerModel.password ?? '',
+          'pass_confirm': registerModel.passConfirm ?? '',
+          'fullname': registerModel.fullName ?? '',
+          'phone': registerModel.phone ?? '',
+        },
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        encoding: Encoding.getByName("utf-8")
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 202) {
+      return response.statusCode;
+    } else {
+      return RegisterErrorModel.fromJson(jsonDecode(response.body));
     }
   }
 }

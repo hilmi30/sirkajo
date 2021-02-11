@@ -57,6 +57,12 @@ class _DaftarPageState extends State<DaftarPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    print(widget.idKamar);
+  }
+
+  @override
   void deactivate() {
     EasyLoading.dismiss();
     super.deactivate();
@@ -72,15 +78,15 @@ class _DaftarPageState extends State<DaftarPage> {
           return AlertDialog(
             content: Text("Pilih Gambar"),
             actions: [
+              // FlatButton(
+              //   child: Text("Camera"),
+              //   onPressed: () {
+              //     getImage(ImageSource.camera, id);
+              //     Navigator.pop(context);
+              //   },
+              // ),
               FlatButton(
-                child: Text("Camera"),
-                onPressed: () {
-                  getImage(ImageSource.camera, id);
-                  Navigator.pop(context);
-                },
-              ),
-              FlatButton(
-                child: Text("Galeri"),
+                child: Text("Pilih Foto"),
                 onPressed: () {
                   getImage(ImageSource.gallery, id);
                   Navigator.pop(context);
@@ -100,6 +106,7 @@ class _DaftarPageState extends State<DaftarPage> {
       );
       ApiRepo().tambahSewa(widget.idKamar, ktpImg, kkImg, suratNikahImg).then((status) {
         EasyLoading.dismiss();
+        print(status.toString());
         if (status == 200) {
           showDialog(
             context: context,

@@ -10,6 +10,7 @@ import 'package:sirkajo/pages/daftar_page.dart';
 import 'package:sirkajo/pages/lantai_page.dart';
 import 'package:sirkajo/pages/keluhan_page.dart';
 import 'package:sirkajo/pages/login_page.dart';
+import 'package:sirkajo/pages/setting_page.dart';
 import 'package:sirkajo/pages/tagihan_page.dart';
 import 'package:sirkajo/pages/tentang_kami_page.dart';
 import 'package:sirkajo/services/SharePref.dart';
@@ -124,7 +125,7 @@ class _HomePageState extends State<HomePage> {
           PopupMenuButton<String>(
             onSelected: handleClick,
             itemBuilder: (BuildContext context) {
-              return {'Pengaturan', 'Tentang Kami', 'Logout'}.map((String choice) {
+              return {'Profil', 'Tentang Kami', 'Logout'}.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),
@@ -249,9 +250,7 @@ class _HomePageState extends State<HomePage> {
 
                 ],
               )
-            ) : Expanded(
-                child: Center(child: Text('Anda belum menyewa kamar'))
-            )
+            ) : SizedBox(height: 0,)
           ],
         ),
       ),
@@ -287,7 +286,13 @@ class _HomePageState extends State<HomePage> {
           ),
         );
         break;
-      case 'Settings':
+      case 'Profil':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SettingPage(),
+          ),
+        );
         break;
     }
   }

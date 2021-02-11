@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sirkajo/models/kamar_model.dart';
 import 'package:sirkajo/models/lantai_model.dart';
 import 'package:sirkajo/models/login_model.dart';
+import 'package:sirkajo/models/profile_model.dart';
 import 'package:sirkajo/models/register_error.dart';
 import 'package:sirkajo/models/register_model.dart';
 import 'package:sirkajo/models/sewa_model.dart';
@@ -173,6 +174,7 @@ class ApiRepo {
   }
 
   Future<bool> tambahKeluhan(String idSewa, keluhan, File foto) async {
+    print(foto.path);
     var uri = Uri.parse("$_baseUrl/keluhan");
     var length = await foto.length();
 
@@ -242,6 +244,22 @@ class ApiRepo {
       return response.statusCode;
     } else {
       return RegisterErrorModel.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<ProfileModel> getProfile() async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String id = prefs.getString('id');
+
+    var response = await http.get(
+        "$_baseUrl/users/profile/$id"
+    );
+
+    if (response.statusCode == 200) {
+      return ProfileModel.fromJson(jsonDecode(response.body));
+    } else {
+      return null;
     }
   }
 }

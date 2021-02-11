@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:sirkajo/models/profile_model.dart';
 import 'package:sirkajo/models/register_model.dart';
 import 'package:sirkajo/network/api_repo.dart';
 import 'package:sirkajo/services/text_helper.dart';
@@ -19,10 +20,23 @@ class _SettingPageState extends State<SettingPage> {
   TextEditingController passController = TextEditingController();
   TextEditingController ulangPassController = TextEditingController();
 
+  ProfileModel dataProfile;
+
   @override
   void initState() {
     super.initState();
-
+    dataProfile = ProfileModel();
+    EasyLoading.show(
+      status: 'Mohon Tunggu',
+      maskType: EasyLoadingMaskType.black
+    );
+    ApiRepo().getProfile().then((value) {
+      EasyLoading.dismiss();
+      print(value.message.username);
+      setState(() {
+        dataProfile = value;
+      });
+    });
   }
 
   @override
@@ -65,16 +79,18 @@ class _SettingPageState extends State<SettingPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  // initialValue: dataProfile.message.username ?? '',
                     decoration: inputDecoration('Nama Pengguna'),
                     controller: namaUserController,
                     keyboardType: TextInputType.text,
                     autocorrect: false,
-                    validator: (val) => TextHelper().validateRequired(val, 'Username')
+                    validator: (val) => TextHelper().validateRequired(val, 'Username'),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  // initialValue: dataProfile.message.fullname ?? '',
                   decoration: inputDecoration('Nama Lengkap'),
                   controller: namaController,
                   keyboardType: TextInputType.name,
@@ -85,6 +101,7 @@ class _SettingPageState extends State<SettingPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                    // initialValue: dataProfile.message.email ?? '',
                     decoration: inputDecoration('Email'),
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -95,6 +112,7 @@ class _SettingPageState extends State<SettingPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  // initialValue: dataProfile.message.phone ?? '',
                   decoration: inputDecoration('No. Handphone'),
                   controller: hpController,
                   keyboardType: TextInputType.phone,

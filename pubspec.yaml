@@ -35,6 +35,8 @@ dependencies:
   firebase_messaging: ^7.0.3
   device_info: ^0.4.2+8
   flutter_money_formatter: ^0.8.3
+  image: ^2.1.19
+  flutter_image_compress: ^0.7.0
 
 dev_dependencies:
   flutter_test:

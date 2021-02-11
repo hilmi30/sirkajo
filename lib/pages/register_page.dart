@@ -228,6 +228,25 @@ class _RegisterPageState extends State<RegisterPage> {
                                 },
                               );
                             }
+                            if (data.password != null) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Terjadi Kesalahan"),
+                                    content: Text("Password tidak valid"),
+                                    actions: [
+                                      FlatButton(
+                                        child: Text("Tutup"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
                           }
                         });
                       }

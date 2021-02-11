@@ -11,8 +11,6 @@ class SharePref {
     prefs.setString('username', login.message.username);
     prefs.setString('fullname', login.message.fullname);
     prefs.setString('phone', login.message.phone);
-    prefs.setString('nokk', login.message.noKk);
-    prefs.setString('noktp', login.message.noKtp);
   }
 
   void hapusSharefPref() async {

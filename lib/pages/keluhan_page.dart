@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sirkajo/network/api_repo.dart';
 import 'package:sirkajo/services/text_helper.dart';
@@ -26,17 +27,37 @@ class _KeluhanPageState extends State<KeluhanPage> {
   File _image;
   final picker = ImagePicker();
 
+  void compressImage(File file) async {
+    // Get file path
+    // eg:- "Volume/VM/abcd.jpeg"
+    final filePath = file.absolute.path;
+
+    // Create output file path
+    // eg:- "Volume/VM/abcd_out.jpeg"
+    final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
+    final splitted = filePath.substring(0, (lastIndex));
+    final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
+
+    final compressedImage = await FlutterImageCompress.compressAndGetFile(
+        filePath,
+        outPath,
+        quality: 50);
+
+    setState(() {
+      _image = compressedImage;
+    });
+  }
+
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
-    setState(() {
-      if (pickedFile != null) {
-        setState(() {
-          _image = File(pickedFile.path);
-        });
-      } else {
-        print('No image selected.');
-      }
-    });
+    if (pickedFile != null) {
+      compressImage(File(pickedFile.path));
+      // setState(() {
+      //   _image = File(pickedFile.path);
+      // });
+    } else {
+      print('No image selected.');
+    }
   }
 
   @override
@@ -116,7 +137,6 @@ class _KeluhanPageState extends State<KeluhanPage> {
                         EasyLoading.show(
                           status: 'Mohon Tunggu',
                           maskType: EasyLoadingMaskType.black,
-                          dismissOnTap: true
                         );
                         ApiRepo().tambahKeluhan(widget.idSewa, keluhanController.text, _image).then((status) {
                           EasyLoading.dismiss();

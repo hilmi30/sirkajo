@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sirkajo/network/api_repo.dart';
 import 'package:sirkajo/pages/home_page.dart';
@@ -28,32 +29,41 @@ class _DaftarPageState extends State<DaftarPage> {
 
   Future getImage(ImageSource source, String id) async {
     final pickedFile = await picker.getImage(source: source);
-    setState(() {
-      if (pickedFile != null) {
-        switch (id) {
-          case 'ktp': {
-             setState(() {
-               ktpImg = File(pickedFile.path);
-             });
-          }
-          break;
-          case 'kk' : {
-            setState(() {
-              kkImg = File(pickedFile.path);
-            });
-          }
-          break;
-          case 'suratNikah': {
-            setState(() {
-              suratNikahImg = File(pickedFile.path);
-            });
-          }
-          break;
+    if (pickedFile != null) {
+      final filePath = File(pickedFile.path).absolute.path;
+
+      final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
+      final splitted = filePath.substring(0, (lastIndex));
+      final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
+
+      final compressedImage = await FlutterImageCompress.compressAndGetFile(
+          filePath,
+          outPath,
+          quality: 50);
+
+      switch (id) {
+        case 'ktp': {
+          setState(() {
+            ktpImg = compressedImage;
+          });
         }
-      } else {
-        print('No image selected.');
+        break;
+        case 'kk' : {
+          setState(() {
+            kkImg = compressedImage;
+          });
+        }
+        break;
+        case 'suratNikah': {
+          setState(() {
+            suratNikahImg = compressedImage;
+          });
+        }
+        break;
       }
-    });
+    } else {
+      print('No image selected.');
+    }
   }
 
   @override
@@ -78,15 +88,15 @@ class _DaftarPageState extends State<DaftarPage> {
           return AlertDialog(
             content: Text("Pilih Gambar"),
             actions: [
-              // FlatButton(
-              //   child: Text("Camera"),
-              //   onPressed: () {
-              //     getImage(ImageSource.camera, id);
-              //     Navigator.pop(context);
-              //   },
-              // ),
               FlatButton(
-                child: Text("Pilih Foto"),
+                child: Text("Camera"),
+                onPressed: () {
+                  getImage(ImageSource.camera, id);
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                child: Text("Galeri"),
                 onPressed: () {
                   getImage(ImageSource.gallery, id);
                   Navigator.pop(context);

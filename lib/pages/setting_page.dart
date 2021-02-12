@@ -20,12 +20,9 @@ class _SettingPageState extends State<SettingPage> {
   TextEditingController passController = TextEditingController();
   TextEditingController ulangPassController = TextEditingController();
 
-  ProfileModel dataProfile;
-
   @override
   void initState() {
     super.initState();
-    dataProfile = ProfileModel();
     EasyLoading.show(
       status: 'Mohon Tunggu',
       maskType: EasyLoadingMaskType.black
@@ -33,9 +30,10 @@ class _SettingPageState extends State<SettingPage> {
     ApiRepo().getProfile().then((value) {
       EasyLoading.dismiss();
       print(value.message.username);
-      setState(() {
-        dataProfile = value;
-      });
+      namaUserController.text = value.message.username;
+      namaController.text = value.message.fullname;
+      emailController.text = value.message.email;
+      hpController.text = value.message.phone;
     });
   }
 
@@ -79,7 +77,6 @@ class _SettingPageState extends State<SettingPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
-                  // initialValue: dataProfile.message.username ?? '',
                     decoration: inputDecoration('Nama Pengguna'),
                     controller: namaUserController,
                     keyboardType: TextInputType.text,
@@ -194,6 +191,24 @@ class _SettingPageState extends State<SettingPage> {
                               },
                             );
                           } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Update gagal"),
+                                  content: Text("Mohon cek data anda"),
+                                  actions: [
+                                    FlatButton(
+                                      child: Text("Tutup"),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+
                             if (data.username != null) {
                               showDialog(
                                 context: context,

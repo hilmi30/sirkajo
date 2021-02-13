@@ -60,7 +60,8 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             SizedBox(height: 50,),
-            Image.asset('assets/img/home.png', width: 100, height: 100,),
+            Image.asset('assets/img/logo.png', width: 100, height: 100,),
+            SizedBox(height: 20,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50),
               child: Text('Selamat Datang di Sistem Informasi Rusunawa Kyai Mojo Jobokuto Jepara',
@@ -69,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                     fontSize: 20
                 ),),
             ),
-            SizedBox(height: 50.0,),
+            SizedBox(height: 30.0,),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text('Silahkan ketik Username/Email dan Password anda untuk masuk',

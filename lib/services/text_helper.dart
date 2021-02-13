@@ -20,6 +20,15 @@ class TextHelper {
     return null;
   }
 
+  String validateUsername(String val, fieldName) {
+    if (val == null || val == '') {
+      return '$fieldName tidak boleh kosong';
+    } else if (val.contains(' ')) {
+      return '$fieldName tidak boleh ada spasi';
+    }
+    return null;
+  }
+
   String validateLength(String val, fieldName, int length) {
     if (val == null || val == '') {
       return '$fieldName tidak boleh kosong';

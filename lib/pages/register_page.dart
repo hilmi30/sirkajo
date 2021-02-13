@@ -64,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: namaUserController,
                   keyboardType: TextInputType.text,
                   autocorrect: false,
-                  validator: (val) => TextHelper().validateRequired(val, 'Username')
+                  validator: (val) => TextHelper().validateUsername(val, 'Username')
                 ),
               ),
               Padding(

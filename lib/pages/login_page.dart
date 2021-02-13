@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sirkajo/network/api_repo.dart';
+import 'package:sirkajo/pages/forgotpass_page.dart';
 import 'package:sirkajo/pages/register_page.dart';
 import 'package:sirkajo/services/text_helper.dart';
 
@@ -128,10 +129,18 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: _validateFormAndLogin
             ),
             SizedBox(height: 32,),
-            Text('Lupa Password', textAlign: TextAlign.center, style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold
-            ),),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ForgotPassPage()),
+                );
+              },
+              child: Text('Lupa Password', textAlign: TextAlign.center, style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold
+              ),),
+            ),
             SizedBox(height: 16,),
             GestureDetector(
               onTap: () {

@@ -18,7 +18,7 @@ import 'package:sirkajo/services/SharePref.dart';
 import 'package:path/path.dart';
 
 class ApiRepo {
-  final _baseUrl = "https://polar-badlands-80162.herokuapp.com/api/v1";
+  final _baseUrl = "https://sirkajo.online/api/v1";
 
   Future<dynamic> register(RegisterModel registerModel) async {
     var response = await http.post(
@@ -261,5 +261,22 @@ class ApiRepo {
     } else {
       return null;
     }
+  }
+
+  Future<int> forgotPass(String email) async {
+
+    var response = await http.post(
+        "$_baseUrl/users/forgot",
+        body: {
+          'email': email,
+        },
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        encoding: Encoding.getByName("utf-8")
+    );
+
+    return response.statusCode;
   }
 }

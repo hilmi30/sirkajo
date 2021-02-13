@@ -29,16 +29,11 @@ class Message {
   String username;
   String passwordHash;
   String resetHash;
-  String resetAt;
-  String resetExpires;
-  String activateHash;
-  String status;
-  String statusMessage;
+  ResetExpires resetExpires;
   bool active;
   bool forcePassReset;
-  CreatedAt createdAt;
-  CreatedAt updatedAt;
-  String deletedAt;
+  ResetExpires createdAt;
+  ResetExpires updatedAt;
   String fullname;
   String phone;
   String avatar;
@@ -51,16 +46,11 @@ class Message {
         this.username,
         this.passwordHash,
         this.resetHash,
-        this.resetAt,
         this.resetExpires,
-        this.activateHash,
-        this.status,
-        this.statusMessage,
         this.active,
         this.forcePassReset,
         this.createdAt,
         this.updatedAt,
-        this.deletedAt,
         this.fullname,
         this.phone,
         this.avatar,
@@ -73,20 +63,17 @@ class Message {
     username = json['username'];
     passwordHash = json['password_hash'];
     resetHash = json['reset_hash'];
-    resetAt = json['reset_at'];
-    resetExpires = json['reset_expires'];
-    activateHash = json['activate_hash'];
-    status = json['status'];
-    statusMessage = json['status_message'];
+    resetExpires = json['reset_expires'] != null
+        ? new ResetExpires.fromJson(json['reset_expires'])
+        : null;
     active = json['active'];
     forcePassReset = json['force_pass_reset'];
     createdAt = json['created_at'] != null
-        ? new CreatedAt.fromJson(json['created_at'])
+        ? new ResetExpires.fromJson(json['created_at'])
         : null;
     updatedAt = json['updated_at'] != null
-        ? new CreatedAt.fromJson(json['updated_at'])
+        ? new ResetExpires.fromJson(json['updated_at'])
         : null;
-    deletedAt = json['deleted_at'];
     fullname = json['fullname'];
     phone = json['phone'];
     avatar = json['avatar'];
@@ -101,11 +88,9 @@ class Message {
     data['username'] = this.username;
     data['password_hash'] = this.passwordHash;
     data['reset_hash'] = this.resetHash;
-    data['reset_at'] = this.resetAt;
-    data['reset_expires'] = this.resetExpires;
-    data['activate_hash'] = this.activateHash;
-    data['status'] = this.status;
-    data['status_message'] = this.statusMessage;
+    if (this.resetExpires != null) {
+      data['reset_expires'] = this.resetExpires.toJson();
+    }
     data['active'] = this.active;
     data['force_pass_reset'] = this.forcePassReset;
     if (this.createdAt != null) {
@@ -114,7 +99,6 @@ class Message {
     if (this.updatedAt != null) {
       data['updated_at'] = this.updatedAt.toJson();
     }
-    data['deleted_at'] = this.deletedAt;
     data['fullname'] = this.fullname;
     data['phone'] = this.phone;
     data['avatar'] = this.avatar;
@@ -124,14 +108,14 @@ class Message {
   }
 }
 
-class CreatedAt {
+class ResetExpires {
   String date;
   int timezoneType;
   String timezone;
 
-  CreatedAt({this.date, this.timezoneType, this.timezone});
+  ResetExpires({this.date, this.timezoneType, this.timezone});
 
-  CreatedAt.fromJson(Map<String, dynamic> json) {
+  ResetExpires.fromJson(Map<String, dynamic> json) {
     date = json['date'];
     timezoneType = json['timezone_type'];
     timezone = json['timezone'];

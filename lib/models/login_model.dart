@@ -29,16 +29,11 @@ class Message {
   String username;
   String passwordHash;
   String resetHash;
-  Null resetAt;
   ResetExpires resetExpires;
-  Null activateHash;
-  Null status;
-  Null statusMessage;
   bool active;
   bool forcePassReset;
   ResetExpires createdAt;
   ResetExpires updatedAt;
-  Null deletedAt;
   String fullname;
   String phone;
   String avatar;
@@ -51,16 +46,11 @@ class Message {
         this.username,
         this.passwordHash,
         this.resetHash,
-        this.resetAt,
         this.resetExpires,
-        this.activateHash,
-        this.status,
-        this.statusMessage,
         this.active,
         this.forcePassReset,
         this.createdAt,
         this.updatedAt,
-        this.deletedAt,
         this.fullname,
         this.phone,
         this.avatar,
@@ -73,13 +63,9 @@ class Message {
     username = json['username'];
     passwordHash = json['password_hash'];
     resetHash = json['reset_hash'];
-    resetAt = json['reset_at'];
     resetExpires = json['reset_expires'] != null
         ? new ResetExpires.fromJson(json['reset_expires'])
         : null;
-    activateHash = json['activate_hash'];
-    status = json['status'];
-    statusMessage = json['status_message'];
     active = json['active'];
     forcePassReset = json['force_pass_reset'];
     createdAt = json['created_at'] != null
@@ -88,7 +74,6 @@ class Message {
     updatedAt = json['updated_at'] != null
         ? new ResetExpires.fromJson(json['updated_at'])
         : null;
-    deletedAt = json['deleted_at'];
     fullname = json['fullname'];
     phone = json['phone'];
     avatar = json['avatar'];
@@ -103,13 +88,9 @@ class Message {
     data['username'] = this.username;
     data['password_hash'] = this.passwordHash;
     data['reset_hash'] = this.resetHash;
-    data['reset_at'] = this.resetAt;
     if (this.resetExpires != null) {
       data['reset_expires'] = this.resetExpires.toJson();
     }
-    data['activate_hash'] = this.activateHash;
-    data['status'] = this.status;
-    data['status_message'] = this.statusMessage;
     data['active'] = this.active;
     data['force_pass_reset'] = this.forcePassReset;
     if (this.createdAt != null) {
@@ -118,7 +99,6 @@ class Message {
     if (this.updatedAt != null) {
       data['updated_at'] = this.updatedAt.toJson();
     }
-    data['deleted_at'] = this.deletedAt;
     data['fullname'] = this.fullname;
     data['phone'] = this.phone;
     data['avatar'] = this.avatar;

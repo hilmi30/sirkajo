@@ -23,17 +23,23 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void initState() {
     super.initState();
+    getProfile();
+  }
+
+  void getProfile() {
     EasyLoading.show(
-      status: 'Mohon Tunggu',
-      maskType: EasyLoadingMaskType.black
+        status: 'Mohon Tunggu',
+        maskType: EasyLoadingMaskType.black
     );
     ApiRepo().getProfile().then((value) {
       EasyLoading.dismiss();
       print(value.message.username);
-      namaUserController.text = value.message.username;
-      namaController.text = value.message.fullname;
-      emailController.text = value.message.email;
-      hpController.text = value.message.phone;
+      setState(() {
+        namaUserController.text = value.message.username;
+        namaController.text = value.message.fullname;
+        emailController.text = value.message.email;
+        hpController.text = value.message.phone;
+      });
     });
   }
 
@@ -81,7 +87,7 @@ class _SettingPageState extends State<SettingPage> {
                     controller: namaUserController,
                     keyboardType: TextInputType.text,
                     autocorrect: false,
-                    validator: (val) => TextHelper().validateRequired(val, 'Username'),
+                    validator: (val) => TextHelper().validateUsername(val, 'Username'),
                 ),
               ),
               Padding(

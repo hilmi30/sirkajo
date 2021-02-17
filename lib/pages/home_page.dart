@@ -222,9 +222,9 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: SafeArea(
-        child: Column(
+        child: dataSewa != null ? Column(
           children: [
-            (dataSewa != null) ? Expanded(
+            Expanded(
               child: ListView(
                 children: [
                   SizedBox(height: 16,),
@@ -250,8 +250,26 @@ class _HomePageState extends State<HomePage> {
 
                 ],
               )
-            ) : SizedBox(height: 0,)
+            ),
           ],
+        ) : Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.asset('assets/img/building.png', width: 150, height: 150, fit: BoxFit.contain,),
+              SizedBox(height: 16,),
+              Text('Selamat Datang di\nSistem Informasi Rusunawa Kyai Mojo', style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold
+              ),),
+              SizedBox(height: 16,),
+              Text('Aplikasi ini memudahkan Anda dalam mengakses informasi seputar Rusunawa', style: TextStyle(
+
+                ),),
+            ],
+          ),
         ),
       ),
     );
